@@ -8,14 +8,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Block } from "galio-framework";
 
 // screens
-import Home from "../screens/Home";
 import Onboarding from "../screens/Onboarding";
-import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
+//new screens
+import Home from "../screens/Home";
 import Register from "../screens/Register";
 import Login from "../screens/Login";
-import Elements from "../screens/Elements";
-import Articles from "../screens/Articles";
+import PersonSearch from "../screens/PersonSearch";
 // drawer
 import CustomDrawerContent from "./Menu";
 
@@ -29,58 +28,17 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
-function ElementsStack(props) {
-  return (
-    <Stack.Navigator mode="card" headerMode="screen">
-      <Stack.Screen
-        name="Elements"
-        component={Elements}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header title="Elements" navigation={navigation} scene={scene} />
-          ),
-          cardStyle: { backgroundColor: "#F8F9FE" }
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ArticlesStack(props) {
-  return (
-    <Stack.Navigator mode="card" headerMode="screen">
-      <Stack.Screen
-        name="Articles"
-        component={Articles}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header title="Articles" navigation={navigation} scene={scene} />
-          ),
-          cardStyle: { backgroundColor: "#F8F9FE" }
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
 function ProfileStack(props) {
   return (
-    <Stack.Navigator initialRouteName="Profile" mode="card" headerMode="screen">
+    <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
         name="Profile"
         component={Profile}
         options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              transparent
-              white
-              title="Profile"
-              navigation={navigation}
-              scene={scene}
-            />
+          header: () => (
+            <Header/>
           ),
           cardStyle: { backgroundColor: "#FFFFFF" },
-          headerTransparent: true
         }}
       />
     </Stack.Navigator>
@@ -95,9 +53,24 @@ function HomeStack(props) {
         component={Home}
         options={{
           header:() => (
-            <Header
-              title="Home"
-            />
+            <Header/>
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" }
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function PersonSearchStack(props) {
+  return (
+    <Stack.Navigator mode="card" headerMode="screen">
+      <Stack.Screen
+        name="PersonSearch"
+        component={PersonSearch}
+        options={{
+          header:() => (
+            <Header/>
           ),
           cardStyle: { backgroundColor: "#F8F9FE" }
         }}
@@ -125,14 +98,12 @@ function AppStack(props) {
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
-      initialRouteName="Login"
-    >
+      initialRouteName="Login">
       <Drawer.Screen name="Home" component={HomeStack} />
       <Drawer.Screen name="Profile" component={ProfileStack} />
       <Drawer.Screen name="Account" component={Register} />
       <Drawer.Screen name="Login" component={Login} />
-      <Drawer.Screen name="Elements" component={ElementsStack} />
-      <Drawer.Screen name="Articles" component={ArticlesStack} />
+      <Drawer.Screen name="PersonSearch" component={PersonSearchStack} />
     </Drawer.Navigator>
   );
 }

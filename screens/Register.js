@@ -4,17 +4,19 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from "react-native";
-import { Block, Checkbox, Text, theme } from "galio-framework";
+import { Block, Text, Button as GaButton, theme ,Checkbox} from "galio-framework";
 
 import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import axios from 'axios';
+import { api } from '../config.json'
 
 const { width, height } = Dimensions.get("screen");
 
-const Register = () => {
+const Register = ({ navigation }) => {
   const [checkboxed, setCheckboxed] = useState(false)
   const [formdata, setFormdata] = useState([])
 
@@ -23,11 +25,24 @@ const Register = () => {
     console.log(formdata)
     if (checkboxed) {
       //if (CheckForm()) {
-      axios.post(`https://guy-react-native-backend.herokuapp.com/api/signup`, formdata)
+      axios.post(`${api}/api/signup`, formdata)
         .then(response => {
+          Alert.alert(
+            "Registered Succesfully",
+            [
+              { text: "Continue", onPress: () => console.log("Continue") }
+            ]
+          );
           console.log(response.data)
         })
         .catch((error) => {
+          Alert.alert(
+            "Register Unsuccesfull",
+            error
+            [
+            { text: "Try Again", onPress: () => console.log("Try Again") }
+            ]
+          );
           console.log(error);
         })
       // }
@@ -72,30 +87,45 @@ const Register = () => {
                 Sign up with
                 </Text>
               <Block row style={{ marginTop: theme.SIZES.BASE }}>
-                <Button style={{ ...styles.socialButtons, marginRight: 30 }}>
-                  <Block row>
-                    <Icon
-                      name="logo-github"
-                      family="Ionicon"
-                      size={14}
-                      color={"black"}
-                      style={{ marginTop: 2, marginRight: 5 }}
-                    />
-                    <Text style={styles.socialTextButtons}>GITHUB</Text>
-                  </Block>
-                </Button>
-                <Button style={styles.socialButtons}>
-                  <Block row>
-                    <Icon
-                      name="logo-google"
-                      family="Ionicon"
-                      size={14}
-                      color={"black"}
-                      style={{ marginTop: 2, marginRight: 5 }}
-                    />
-                    <Text style={styles.socialTextButtons}>GOOGLE</Text>
-                  </Block>
-                </Button>
+                <Block flex middle right>
+                  <GaButton
+                    round
+                    onlyIcon
+                    shadowless
+                    icon="google"
+                    iconFamily="Font-Awesome"
+                    iconColor={theme.COLORS.WHITE}
+                    iconSize={theme.SIZES.BASE * 1.625}
+                    color='#f74933'
+                    style={[styles.social, styles.shadow]}
+                  />
+                </Block>
+                <Block flex middle>
+                  <GaButton
+                    round
+                    onlyIcon
+                    shadowless
+                    icon="twitter"
+                    iconFamily="Font-Awesome"
+                    iconColor={theme.COLORS.WHITE}
+                    iconSize={theme.SIZES.BASE * 1.625}
+                    color='#1d9bf0'
+                    style={[styles.social, styles.shadow]}
+                  />
+                </Block>
+                <Block flex middle left>
+                  <GaButton
+                    round
+                    onlyIcon
+                    shadowless
+                    icon="facebook"
+                    iconFamily="Font-Awesome"
+                    iconColor={theme.COLORS.WHITE}
+                    iconSize={theme.SIZES.BASE * 1.625}
+                    color={theme.COLORS.FACEBOOK}
+                    style={[styles.social, styles.shadow]}
+                  />
+                </Block>
               </Block>
             </Block>
             <Block flex>
@@ -171,7 +201,7 @@ const Register = () => {
                     </Block>
                   </Block>
                   <Block row>
-                  <Checkbox
+                    <Checkbox
                       checkboxStyle={{
                         borderWidth: 3
                       }}
@@ -190,7 +220,7 @@ const Register = () => {
                     >
                       Privacy Policy
                       </Button>
-                    <Text style={{alignSelf:'center'}}>I Agree With The</Text>
+                    <Text style={{ alignSelf: 'center' }}>I Agree With The</Text>
 
                   </Block>
                   <Block middle>

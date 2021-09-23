@@ -12,10 +12,10 @@ import { DrawerItem as DrawerCustomItem } from '../components';
 function CustomDrawerContent({ drawerPosition, navigation, profile, focused, state, ...rest }) {
   const screens = [
     "Home", 
-    "Profile",
-    "Account",
-    "Elements",
-    "Articles",
+//    "Profile",
+    //"Account",
+    //"Elements",
+    // "Articles",
   ];
   return (
     <Block
@@ -23,10 +23,14 @@ function CustomDrawerContent({ drawerPosition, navigation, profile, focused, sta
       forceInset={{ top: 'always', horizontal: 'never' }}
     >
       <Block flex={0.06} style={styles.header}>
-        <Image styles={styles.logo} source={Images.Logo} />
+        <Image styles={styles.logo} source={Images.Logo} /> 
+        {/* logo */}
       </Block>
       <Block flex style={{ paddingLeft: 8, paddingRight: 14 }}>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <Block flex style={{ marginTop: 24, marginVertical: 8, paddingHorizontal: 8 }}>
+        <Text color="#8898AA" style={{ marginTop: 16, marginLeft: 8 }}>SETTINGS</Text>
+        </Block>
           {screens.map((item, index) => {
               return (
                 <DrawerCustomItem

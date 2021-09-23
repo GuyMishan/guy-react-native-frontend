@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0
   },
   fullImage: {
-    height: 215
+    height: 350
   },
   shadow: {
     shadowColor: theme.COLORS.BLACK,

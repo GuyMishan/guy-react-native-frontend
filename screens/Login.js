@@ -4,39 +4,53 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert,
+  ActivityIndicator,
+  View
 } from "react-native";
-import { Block, Checkbox, Text, theme } from "galio-framework";
+import { Block, Text, Button as GaButton, theme } from "galio-framework";
 
 import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
+import { api } from '../config.json'
 
 const { width, height } = Dimensions.get("screen");
 
 const Login = ({ navigation }) => {
+  const [loading, setLoading] = useState(false)
   const [formdata, setFormdata] = useState([])
 
   const clicksubmit = async event => {
-    ClearPrevUserData()
-    axios.post(`https://guy-react-native-backend.herokuapp.com/api/signin`, formdata)
+    setLoading(true);
+    axios.post(`${api}/api/signin`, formdata)
       .then(response => {
+        setLoading(false);
         StoreUserData(response.data._id);
       })
       .catch((error) => {
+        setLoading(false);
+        Alert.alert(
+          "Sign in Failed",
+          "One or more credentials are incorrect",
+          [
+            { text: "Try Again", onPress: () => console.log("Try Again") }
+          ]
+        );
         console.log(error);
       })
   }
 
-  async function ClearPrevUserData()//nneds to be on signout
+  /*async function ClearPrevUserData()//nneds to be on signout
   {
     try {
       await AsyncStorage.removeItem('user_id_token');
     } catch (error) {
       console.log('AsyncStorage error: ' + error.message);
     }
-  }
+  }*/
 
   async function StoreUserData(user_id) {
     try {
@@ -47,13 +61,28 @@ const Login = ({ navigation }) => {
     navigation.navigate('Home')
   }
 
+  async function CheckIfUserIsSigned(user_id) {
+    try {
+      var gettoken = await AsyncStorage.getItem('asdsa')
+      console.log(gettoken);
+      if (gettoken != null) {
+        navigation.navigate('Home')
+      }
+    } catch (error) {
+      console.log('AsyncStorage error: ' + error.message);
+    }
+  }
+
+  useEffect(() => {
+    CheckIfUserIsSigned()
+  }, [])
+
+
   return (
     <Block flex middle>
-      <StatusBar hidden />
       <ImageBackground
         source={Images.RegisterBackground}
-        style={{ width, height, zIndex: 1 }}
-      >
+        style={{ width, height, zIndex: 1 }}>
         <Block safe flex middle>
           <Block style={styles.registerContainer}>
             <Block flex={0.25} middle style={styles.socialConnect}>
@@ -61,30 +90,45 @@ const Login = ({ navigation }) => {
                 Sign in with
                 </Text>
               <Block row style={{ marginTop: theme.SIZES.BASE }}>
-                <Button style={{ ...styles.socialButtons, marginRight: 30 }}>
-                  <Block row>
-                    <Icon
-                      name="logo-github"
-                      family="Ionicon"
-                      size={14}
-                      color={"black"}
-                      style={{ marginTop: 2, marginRight: 5 }}
-                    />
-                    <Text style={styles.socialTextButtons}>GITHUB</Text>
-                  </Block>
-                </Button>
-                <Button style={styles.socialButtons}>
-                  <Block row>
-                    <Icon
-                      name="logo-google"
-                      family="Ionicon"
-                      size={14}
-                      color={"black"}
-                      style={{ marginTop: 2, marginRight: 5 }}
-                    />
-                    <Text style={styles.socialTextButtons}>GOOGLE</Text>
-                  </Block>
-                </Button>
+                <Block flex middle right>
+                  <GaButton
+                    round
+                    onlyIcon
+                    shadowless
+                    icon="google"
+                    iconFamily="Font-Awesome"
+                    iconColor={theme.COLORS.WHITE}
+                    iconSize={theme.SIZES.BASE * 1.625}
+                    color='#f74933'
+                    style={[styles.social, styles.shadow]}
+                  />
+                </Block>
+                <Block flex middle>
+                  <GaButton
+                    round
+                    onlyIcon
+                    shadowless
+                    icon="twitter"
+                    iconFamily="Font-Awesome"
+                    iconColor={theme.COLORS.WHITE}
+                    iconSize={theme.SIZES.BASE * 1.625}
+                    color='#1d9bf0'
+                    style={[styles.social, styles.shadow]}
+                  />
+                </Block>
+                <Block flex middle left>
+                  <GaButton
+                    round
+                    onlyIcon
+                    shadowless
+                    icon="facebook"
+                    iconFamily="Font-Awesome"
+                    iconColor={theme.COLORS.WHITE}
+                    iconSize={theme.SIZES.BASE * 1.625}
+                    color={theme.COLORS.FACEBOOK}
+                    style={[styles.social, styles.shadow]}
+                  />
+                </Block>
               </Block>
             </Block>
             <Block flex>
@@ -133,6 +177,10 @@ const Login = ({ navigation }) => {
                       onChangeText={text => setFormdata({ ...formdata, password: text })}
                       value={formdata.password}
                     />
+                    <ActivityIndicator
+                      animating={loading}
+                      color="#0000ff"
+                      size="large" />
                   </Block>
                   <Block middle>
                     <Button color="primary" style={styles.createButton} onPress={() => clicksubmit()}>
@@ -142,16 +190,11 @@ const Login = ({ navigation }) => {
                     </Button>
                   </Block>
                 </KeyboardAvoidingView>
-              </Block>
-              <Block flex center>
-              <Text color="#8898AA" size={12} onPress={() => navigation.navigate('Account')}>
-                  Don't have an account? sign up
+                <Block flex center style={{paddingTop:35}}>
+                  <Text color="#8898AA" size={12} onPress={() => navigation.navigate('Account')}>
+                    Don't have an account? sign up
                   </Text>
-                {/* <Button color="primary" style={styles.createButton} onPress={() => clicksubmit()}>
-                  <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                    SIGN UP
-                        </Text>
-                </Button> */}
+                </Block>
               </Block>
             </Block>
           </Block>

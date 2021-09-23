@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Dimensions, ScrollView, Text } from 'react-native';
+import { StyleSheet, Dimensions, ScrollView, Text, View } from 'react-native';
 import { Block, theme } from 'galio-framework';
 
 import { Card } from '../components';
 import articles from '../constants/articles';
 import axios from 'axios'
 import { AsyncStorage } from 'react-native';
+import { api } from '../config.json'
+import Footer from '../components/Footer'
 
 const { width } = Dimensions.get('screen');
 
@@ -21,19 +23,19 @@ class Home extends React.Component {
 
   renderArticles = () => {
     return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.articles}>
-        <Block flex>
-          <Card item={articles[0]} horizontal />
-          <Block flex row>
-            <Card item={articles[1]} style={{ marginRight: theme.SIZES.BASE }} />
-            <Card item={articles[2]} />
+      <>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.articles}>
+          <Block flex>
+            <Card item={articles[0]} full />
+            <Card item={articles[1]} full />
+            <Card item={articles[2]} full />
+            <Card item={articles[3]} full />
+            <Card item={articles[4]} full />
           </Block>
-          <Card item={articles[3]} horizontal />
-          <Card item={articles[4]} full />
-        </Block>
-      </ScrollView>
+        </ScrollView>
+      </>
     )
   }
 
@@ -43,10 +45,11 @@ class Home extends React.Component {
     } catch (error) {
       console.log('AsyncStorage error: ' + error.message);
     }
-    axios.post(`https://guy-react-native-backend.herokuapp.com/api/getuserbyid`, {userid:gettoken})
+    axios.post(`${api}/api/getuserbyid`, { userid: gettoken })
       .then(response => {
         console.log(response.data);
-        this.setState({...this.state,
+        this.setState({
+          ...this.state,
           message2: response.data.name,
         })
       })
@@ -56,9 +59,10 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    return axios.get("https://guy-react-native-backend.herokuapp.com/dreamforce")
+    return axios.get(`${api}/dreamforce`)
       .then((response) => {
-        this.setState({...this.state,
+        this.setState({
+          ...this.state,
           message: response.data.message,
         })
         this.Getuserbytoken()
@@ -70,13 +74,10 @@ class Home extends React.Component {
 
   render() {
     return (
-      <>
-        <Block flex center style={styles.home}>
-          <Text>{this.state.message}</Text>
-          <Text>Hello,{this.state.message2}</Text>
-          {this.renderArticles()}
-        </Block>
-      </>
+      <View style={{ flex: 1 }}>
+        {this.renderArticles()}
+        <Footer navigation={this.props.navigation} />
+      </View>
     );
   }
 }
@@ -86,8 +87,10 @@ const styles = StyleSheet.create({
     width: width,
   },
   articles: {
-    width: width - theme.SIZES.BASE * 2,
-    paddingVertical: theme.SIZES.BASE,
+    flexGrow: 1,
+    justifyContent: 'center',
+    // width: width - theme.SIZES.BASE * 2,
+    // paddingVertical: theme.SIZES.BASE,
   },
 });
 
