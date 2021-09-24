@@ -8,6 +8,7 @@ import axios from 'axios'
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import Footer from '../components/Footer'
+import { Header } from "../components";
 
 const { width } = Dimensions.get('screen');
 
@@ -74,10 +75,13 @@ class Home extends React.Component {
 
   render() {
     return (
+      <>
+      <Header/>
       <View style={{ flex: 1 }}>
         {this.renderArticles()}
         <Footer navigation={this.props.navigation} />
       </View>
+      </>
     );
   }
 }

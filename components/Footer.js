@@ -44,19 +44,8 @@ const Footer = ({ navigation }) => {
         return (navigation.navigate('Home'));
     }
 
-    const handleProfilePress = async() => {
-        try {
-            await AsyncStorage.removeItem('profile_user_id')
-        } catch (error) {
-            console.log('AsyncStorage error: ' + error.message);
-        }
-        try {
-            await AsyncStorage.setItem('profile_user_id',user._id)
-        } catch (error) {
-            console.log('AsyncStorage error: ' + error.message);
-        }
-        navigation.goBack()
-        navigation.navigate('Profile')
+    function handleProfilePress (){
+        return(navigation.navigate('Profile',{userid:user._id,}))
     }
 
     const handleSearchPress = () => {
@@ -70,7 +59,7 @@ const Footer = ({ navigation }) => {
     return (
         <View style={{ flexDirection: "row", height: 55, backgroundColor: "#FFFF", alignItems: 'center' }}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity activeOpacity={.5} onPress={handleProfilePress}>
+                <TouchableOpacity activeOpacity={.5} onPress={()=>handleProfilePress()}>
                     <Image
                         source={{ uri: Images.ProfilePicture }}
                         style={styles.avatar} />

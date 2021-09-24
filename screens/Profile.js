@@ -19,17 +19,18 @@ import axios from 'axios'
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import { useIsFocused } from '@react-navigation/native'
+import { Header } from "../components";
 
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
-const Profile = ({ navigation, route }) => {
+function Profile({ navigation, route }){
   const isFocused = useIsFocused()
   const [user, SetUser] = useState([])
 
   async function Getuserbytoken() {
-    try {
+   /* try {
       var gettoken = await AsyncStorage.getItem('profile_user_id')
     } catch (error) {
       console.log('AsyncStorage error: ' + error.message);
@@ -41,15 +42,25 @@ const Profile = ({ navigation, route }) => {
       })
       .catch((error) => {
         console.log(error);
+      })*/
+      let tempid=route.params.userid;
+      axios.post(`${api}/api/getuserbyid`, { userid: tempid })
+      .then(response => {
+        SetUser(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
       })
   }
 
   useEffect(() => {
     Getuserbytoken()
-   // console.log(route)
+    console.log(route)
   }, [isFocused,route,navigation])
 
   return (
+    <>
+          <Header/>
     <View style={{ flex: 1 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -182,6 +193,7 @@ const Profile = ({ navigation, route }) => {
       </ScrollView>
       <Footer navigation={navigation} />
     </View>
+    </>
   );
 }
 

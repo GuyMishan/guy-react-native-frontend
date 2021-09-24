@@ -11,52 +11,93 @@ import { api } from '../config.json'
 import Icon from '../components/Icon';
 import Input from '../components/Input';
 import Footer from '../components/Footer'
+import { Header } from "../components";
 
 const { width, height } = Dimensions.get("screen");
 
 const PersonSearch = ({ navigation }) => {
+  const [user, SetUser] = useState([])
+
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]); //users
   const [masterDataSource, setMasterDataSource] = useState([]); //users
 
-  async function onaddfriendclick(userid) {
-  console.log("addfriend: "+userid);
+  async function Getuserbytoken() {
+    try {
+      var gettoken = await AsyncStorage.getItem('profile_user_id')
+    } catch (error) {
+      console.log('AsyncStorage error: ' + error.message);
+    }
+    axios.post(`${api}/api/getuserbyid`, { userid: gettoken })
+      .then(response => {
+        console.log(response.data);
+        SetUser(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
-  async function onuserclick(userid) {
-    //console.log("userclick: "+userid);
-    try {
-      await AsyncStorage.removeItem('profile_user_id')
-  } catch (error) {
-      console.log('AsyncStorage error: ' + error.message);
+  async function onaddfriendclick(userid) {
+    axios.post(`${api}/api/friendrequest`, { send_user: user._id, recieved_user: userid })
+      .then(response => {
+        var tempres = response;
+        axios.post(`${api}/api/user/addsentfriendrequest`, { userid: user._id, friendrequestid: response.data._id })
+          .then(response => {
+            axios.post(`${api}/api/user/addrecievedfriendrequest`, { userid: userid, friendrequestid: tempres.data._id })
+              .then(response => {
+                Getuserbytoken()
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
-    try {
-      await AsyncStorage.setItem('profile_user_id',userid)
-  } catch (error) {
-      console.log('AsyncStorage error: ' + error.message);
+
+  async function onuserclick(userid1) {
+    navigation.navigate('Profile',{userid:userid1,})
   }
-  navigation.navigate('Profile')
-    }
+
+  function isuseralreadyfriendrequested(userid) {
+    //check if userid is in user friendrequests already(sender/reciever) +another func for is the user is me?+another
+    // if (userid == user._id)
+    //   return false;
+    //if(user.friendrequests_sent.includes(userid)) !!!!!!!! need to change user get to aggregate and stuff...
+    return true;
+  }
 
   function Item({ item }) {
     return (
       <>
-          <TouchableOpacity style={styles.listItem} onPress={() => onuserclick(item._id)}>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }}>
-            <Image source={{ uri: Images.ProfilePicture }} style={{ width: 60, height: 60, borderRadius: 30 }} />
-          </View>
-          <View style={{ justifyContent: 'center', alignItems: "center", flex: 1 }}>
-            <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
-          </View>
-          <View style={{ justifyContent: 'center', alignItems: "center", flex: 1 }}>
-            <GaButton color="info" style={{ width: '80%', height: '40%' }} onPress={() => onaddfriendclick(item._id)}>
-              <Text bold>
-                Add Friend
-            </Text>
-            </GaButton>
-          </View>
-          </TouchableOpacity>
-        <Block style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
+        {user._id != item._id ?
+          <>
+            <TouchableOpacity style={styles.listItem} onPress={() => onuserclick(item._id)}>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: "center" }}>
+                <Image source={{ uri: Images.ProfilePicture }} style={{ width: 60, height: 60, borderRadius: 30 }} />
+              </View>
+              <View style={{ justifyContent: 'center', alignItems: "center", flex: 1 }}>
+                <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
+              </View>
+              <View style={{ justifyContent: 'center', alignItems: "center", flex: 1 }}>
+                {isuseralreadyfriendrequested(item._id) ?
+                  <GaButton color="info" style={{ width: '80%', height: '40%' }} onPress={() => onaddfriendclick(item._id)}>
+                    <Text bold>
+                      Add Friend
+                    </Text>
+                  </GaButton> : null}
+
+              </View>
+            </TouchableOpacity>
+            <Block style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
+          </>
+          : null}
       </>
     );
   }
@@ -94,9 +135,12 @@ const PersonSearch = ({ navigation }) => {
 
   useEffect(() => {
     LoadAllUsers()
+    Getuserbytoken()
   }, [])
 
   return (
+    <>
+    <Header/>
     <View style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
         <Input
@@ -111,17 +155,18 @@ const PersonSearch = ({ navigation }) => {
           value={search}
         />
         <Block style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
-        {search.length>=2 ? 
-        <FlatList
-          style={{ flex: 1 }}
-          data={filteredDataSource}
-          renderItem={({ item }) => <Item item={item} />}
-          keyExtractor={item => item._id}
-        />:null}
-        
+        {search.length >= 2 ?
+          <FlatList
+            style={{ flex: 1 }}
+            data={filteredDataSource}
+            renderItem={({ item }) => <Item item={item} />}
+            keyExtractor={item => item._id}
+          /> : null}
+
       </SafeAreaView>
       <Footer navigation={navigation} />
     </View>
+    </>
   );
 }
 

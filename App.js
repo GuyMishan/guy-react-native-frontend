@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Image } from "react-native";
+import { Image,SafeAreaView } from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts } from '@use-expo/font';
 import { Asset } from "expo-asset";
@@ -17,9 +17,9 @@ export default props => {
     return (
       <NavigationContainer>
         <GalioProvider theme={argonTheme}>
-          <Block flex>
+          <SafeAreaView style={{flex: 1}}>
             <Screens />
-          </Block>
+          </SafeAreaView >
         </GalioProvider>
       </NavigationContainer>
     );
