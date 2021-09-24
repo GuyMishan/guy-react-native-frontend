@@ -24,7 +24,7 @@ const PersonSearch = ({ navigation }) => {
 
   async function Getuserbytoken() {
     try {
-      var gettoken = await AsyncStorage.getItem('profile_user_id')
+      var gettoken = await AsyncStorage.getItem('user_id_token')
     } catch (error) {
       console.log('AsyncStorage error: ' + error.message);
     }
@@ -38,7 +38,7 @@ const PersonSearch = ({ navigation }) => {
       })
   }
 
-  async function onaddfriendclick(userid) {
+  async function SendFriendRequest(userid) {
     axios.post(`${api}/api/friendrequest`, { send_user: user._id, recieved_user: userid })
       .then(response => {
         var tempres = response;
@@ -65,12 +65,21 @@ const PersonSearch = ({ navigation }) => {
     navigation.navigate('Profile',{userid:userid1,})
   }
 
-  function isuseralreadyfriendrequested(userid) {
+  function isuseralreadyfriendrequested(userid) { //states= {0=no friend whatsoever,1=i requested friend,2=he requested friend,3=already friends(unfriend)}
     //check if userid is in user friendrequests already(sender/reciever) +another func for is the user is me?+another
-    // if (userid == user._id)
-    //   return false;
-    //if(user.friendrequests_sent.includes(userid)) !!!!!!!! need to change user get to aggregate and stuff...
-    return true;
+    if(user.friendrequests_sent_data.some(friendrequest_sent_data=>friendrequest_sent_data.recieved_user===userid))
+    {
+      return 1;
+    }
+    if(user.friendrequests_recieved_data.some(friendrequest_recieved_data=>friendrequest_recieved_data.send_user===userid))
+    {
+      return 2;
+    }
+    /*if(user.friends.some(friend=>friend._id===userid))
+    {
+      return 3;
+    }*/
+    return 0;
   }
 
   function Item({ item }) {
@@ -86,13 +95,31 @@ const PersonSearch = ({ navigation }) => {
                 <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
               </View>
               <View style={{ justifyContent: 'center', alignItems: "center", flex: 1 }}>
-                {isuseralreadyfriendrequested(item._id) ?
-                  <GaButton color="info" style={{ width: '80%', height: '40%' }} onPress={() => onaddfriendclick(item._id)}>
+                {isuseralreadyfriendrequested(item._id) ==0 ? //more than true/false.. write down states!!!
+                  <GaButton color="info" style={{ width: '80%', height: '40%' }} onPress={() => SendFriendRequest(item._id)}>
                     <Text bold>
                       Add Friend
                     </Text>
-                  </GaButton> : null}
-
+                  </GaButton> 
+                  : isuseralreadyfriendrequested(item._id) ==1 ?  
+                  <GaButton color="#808080" style={{ width: '80%', height: '40%' }} /*onPress={() => CancelFriendRequest(item._id)}*/>
+                  <Text bold>
+                    Sent Request
+                  </Text>
+                </GaButton> 
+                : isuseralreadyfriendrequested(item._id) ==2 ?
+                <GaButton color="success" style={{ width: '80%', height: '40%' }} /*onPress={() => AcceptFriendRequest(item._id)}*/>
+                  <Text bold>
+                    Accept Request
+                  </Text>
+                </GaButton> 
+                : isuseralreadyfriendrequested(item._id) ==3 ?
+                <GaButton color="error" style={{ width: '80%', height: '40%' }} /*onPress={() => UnFriendRequest(item._id)}*/>
+                  <Text bold>
+                    Unfriend
+                  </Text>
+                </GaButton> 
+                :null }
               </View>
             </TouchableOpacity>
             <Block style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
