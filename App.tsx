@@ -13,7 +13,7 @@ enableScreens();
 import Screens from "./navigation/Screens";
 import { Images, articles, argonTheme } from "./constants";
 
-export default props => {
+export default function App(){
     return (
       <NavigationContainer>
         <GalioProvider theme={argonTheme}>

@@ -30,19 +30,6 @@ function Profile({ navigation, route }){
   const [user, SetUser] = useState([])
 
   async function Getuserbytoken() {
-   /* try {
-      var gettoken = await AsyncStorage.getItem('profile_user_id')
-    } catch (error) {
-      console.log('AsyncStorage error: ' + error.message);
-    }
-    axios.post(`${api}/api/getuserbyid`, { userid: gettoken })
-      .then(response => {
-        console.log(response.data);
-        SetUser(response.data)
-      })
-      .catch((error) => {
-        console.log(error);
-      })*/
       let tempid=route.params.userid;
       axios.post(`${api}/api/getuserbyid`, { userid: tempid })
       .then(response => {
