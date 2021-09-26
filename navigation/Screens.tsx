@@ -1,9 +1,7 @@
 import React from "react";
-import { Easing, Animated, Dimensions,View } from "react-native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // screens
 import Onboarding from "../screens/Onboarding";
@@ -16,16 +14,12 @@ import PersonSearch from "../screens/PersonSearch";
 // drawer
 import CustomDrawerContent from "./Menu";
 
-// header for screens
-import { Icon, Header } from "../components";
-
-const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-export default function AppStack(props) {
+export default function AppStack() {
   return (
     <Drawer.Navigator
-      drawerContent={props => <CustomDrawerContent {...props} />}
+      drawerContent={props => <CustomDrawerContent/>}
       initialRouteName="Login">
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Profile" component={Profile} />
