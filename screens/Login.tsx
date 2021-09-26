@@ -3,27 +3,30 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
-  StatusBar,
   KeyboardAvoidingView,
   Alert,
   ActivityIndicator,
-  View
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView
 } from "react-native";
-import { Block, Text, Button as GaButton, theme } from "galio-framework";
 
-import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
+import { useNavigation } from '@react-navigation/core';
 
 const { width, height } = Dimensions.get("screen");
 
-const Login = ({ navigation }) => {
+const Login = () => {
+  const navigation=useNavigation();
   const [loading, setLoading] = useState(false)
-  const [formdata, setFormdata] = useState([])
+  const [formdata, setFormdata] = useState<any>([])
 
-  const clicksubmit = async event => {
+  const clicksubmit = async () => {
     setLoading(true);
     axios.post(`${api}/api/signin`, formdata)
       .then(response => {
@@ -43,16 +46,7 @@ const Login = ({ navigation }) => {
       })
   }
 
-  /*async function ClearPrevUserData()//nneds to be on signout
-  {
-    try {
-      await AsyncStorage.removeItem('user_id_token');
-    } catch (error) {
-      console.log('AsyncStorage error: ' + error.message);
-    }
-  }*/
-
-  async function StoreUserData(user_id) {
+  async function StoreUserData(user_id: any) {
     try {
       await AsyncStorage.setItem('user_id_token', user_id);
     } catch (error) {
@@ -61,7 +55,7 @@ const Login = ({ navigation }) => {
     navigation.navigate('Home')
   }
 
-  async function CheckIfUserIsSigned(user_id) {
+  async function CheckIfUserIsSigned() {
     try {
       var gettoken = await AsyncStorage.getItem('asdsa')
       console.log(gettoken);
@@ -73,107 +67,75 @@ const Login = ({ navigation }) => {
     }
   }
 
+    /*async function ClearPrevUserData()//nneds to be on signout
+  {
+    try {
+      await AsyncStorage.removeItem('user_id_token');
+    } catch (error) {
+      console.log('AsyncStorage error: ' + error.message);
+    }
+  }*/
+
   useEffect(() => {
     CheckIfUserIsSigned()
   }, [])
 
-
   return (
-    <Block flex middle>
+    <SafeAreaView style={{ flex: 1,alignItems: 'center',justifyContent: 'center', }}>
       <ImageBackground
+        resizeMode="cover"
         source={Images.RegisterBackground}
-        style={{ width, height, zIndex: 1 }}>
-        <Block safe flex middle>
-          <Block style={styles.registerContainer}>
-            <Block flex={0.25} middle style={styles.socialConnect}>
-              <Text color="#8898AA" size={12}>
+        style={styles.image}>
+        <SafeAreaView style={{ flex: 0.25,alignItems: 'center',justifyContent: 'center', }}>
+          <View style={styles.registerContainer}>
+            <View style={styles.socialConnect}>
+              <Text style={{ color: "#8898AA" }}>
                 Sign in with
                 </Text>
-              <Block row style={{ marginTop: theme.SIZES.BASE }}>
-                <Block flex middle right>
-                  <GaButton
-                    round
-                    onlyIcon
-                    shadowless
-                    icon="google"
-                    iconFamily="Font-Awesome"
-                    iconColor={theme.COLORS.WHITE}
-                    iconSize={theme.SIZES.BASE * 1.625}
-                    color='#f74933'
-                    style={[styles.social, styles.shadow]}
-                  />
-                </Block>
-                <Block flex middle>
-                  <GaButton
-                    round
-                    onlyIcon
-                    shadowless
-                    icon="twitter"
-                    iconFamily="Font-Awesome"
-                    iconColor={theme.COLORS.WHITE}
-                    iconSize={theme.SIZES.BASE * 1.625}
-                    color='#1d9bf0'
-                    style={[styles.social, styles.shadow]}
-                  />
-                </Block>
-                <Block flex middle left>
-                  <GaButton
-                    round
-                    onlyIcon
-                    shadowless
-                    icon="facebook"
-                    iconFamily="Font-Awesome"
-                    iconColor={theme.COLORS.WHITE}
-                    iconSize={theme.SIZES.BASE * 1.625}
-                    color={theme.COLORS.FACEBOOK}
-                    style={[styles.social, styles.shadow]}
-                  />
-                </Block>
-              </Block>
-            </Block>
-            <Block flex>
-              <Block flex={0.17} middle>
-                <Text color="#8898AA" size={12}>
+              <View style={{ flex: 1,flexDirection: 'row' }}>
+                <View style={{ flex: 1,alignItems: 'center',justifyContent: 'center', }}>
+                  <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
+                    <View>
+                     <Text>sdsd</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 1 ,alignItems: 'center',justifyContent: 'center',}} >
+                <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
+                    <View>
+                     <Text>sdsd</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 1,alignItems: 'center',justifyContent: 'center', }}>
+                <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
+                    <View>
+                     <Text>sdsd</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View style={{ flex: 0.25,alignItems: 'center',justifyContent: 'center', }}>
+              <View style={{ flex: 1 }} >
+                <Text style={{ color: "#8898AA" }} >
                   Or sign in the classic way
                   </Text>
-              </Block>
-              <Block flex center>
-                <KeyboardAvoidingView
-                  style={{ flex: 1 }}
-                  behavior="padding"
-                  enabled
-                >
-                  <Block width={width * 0.8} style={{ marginBottom: 15 }}>
-                    <Input
-                      borderless
+              </View>
+              <View style={{ flex: 1 }}>
+                  <View style={{ marginBottom: 15, width: width * 0.8 }}>
+                    <TextInput
+                      style={styles.input}
                       placeholder="Email"
-                      iconContent={
-                        <Icon
-                          size={16}
-                          color={argonTheme.COLORS.ICON}
-                          name="hat-3"
-                          family="ArgonExtra"
-                          style={styles.inputIcons}
-                        />
-                      }
                       onChangeText={text => setFormdata({ ...formdata, email: text })}
                       value={formdata.name}
                     />
-                  </Block>
-                  <Block width={width * 0.8}>
-                    <Input
-                      password
-                      borderless
+                  </View>
+                  <View style={{ marginBottom: 15, width: width * 0.8 }}>
+                    <TextInput
+                      style={styles.input}
+                      secureTextEntry={true}
                       placeholder="Password"
-                      iconContent={
-                        <Icon
-                          size={16}
-                          color={argonTheme.COLORS.ICON}
-                          name="padlock-unlocked"
-                          family="ArgonExtra"
-                          style={styles.inputIcons}
-                        />
-                      }
                       onChangeText={text => setFormdata({ ...formdata, password: text })}
                       value={formdata.password}
                     />
@@ -181,26 +143,25 @@ const Login = ({ navigation }) => {
                       animating={loading}
                       color="#0000ff"
                       size="large" />
-                  </Block>
-                  <Block middle>
-                    <Button color="primary" style={styles.createButton} onPress={() => clicksubmit()}>
-                      <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                        LOGIN
-                        </Text>
-                    </Button>
-                  </Block>
-                </KeyboardAvoidingView>
-                <Block flex center style={{paddingTop:35}}>
-                  <Text color="#8898AA" size={12} onPress={() => navigation.navigate('Account')}>
+                  </View>
+                  <View style={{ paddingTop: 35, flex: 1,alignItems: 'center',justifyContent: 'center' }}>
+                    <TouchableOpacity style={styles.button} onPress={() => clicksubmit()}>
+                    <View>
+                     <Text>LOGIN</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={{ paddingTop: 35, flex: 1,alignItems: 'center',justifyContent: 'center' }}>
+                  <Text onPress={() => navigation.navigate('Account')}>
                     Don't have an account? sign up
                   </Text>
-                </Block>
-              </Block>
-            </Block>
-          </Block>
-        </Block>
+                </View>
+                  </View>
+              </View>
+            </View>
+          </View>
+        </SafeAreaView>
       </ImageBackground>
-    </Block>
+    </SafeAreaView>
   );
 }
 
@@ -221,6 +182,9 @@ const styles = StyleSheet.create({
     overflow: "hidden"
   },
   socialConnect: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 0.25,
     backgroundColor: argonTheme.COLORS.WHITE,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: "#8898AA"
@@ -247,15 +211,30 @@ const styles = StyleSheet.create({
     marginRight: 12
   },
   passwordCheck: {
-    // paddingLeft: 15,
-    // paddingTop: 13,
-    // paddingBottom: 30
     direction: 'ltr'
   },
   createButton: {
     width: width * 0.5,
     marginTop: 25
-  }
+  },
+  image: {
+    flex: 1,
+    justifyContent: "center",
+    width, height, zIndex: 1
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  button: {
+    width: 120,
+    height: 40,
+    alignItems: "center",
+    backgroundColor: "#DDDDDD",
+    padding: 10
+  },
 });
 
 export default Login;

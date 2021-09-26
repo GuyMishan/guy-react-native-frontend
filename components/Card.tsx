@@ -1,56 +1,34 @@
 import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
 import PropTypes from 'prop-types';
-import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback } from 'react-native';
-import { Block, Text, theme } from 'galio-framework';
+import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback,View,Text } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 
-import { argonTheme } from '../constants';
+ type CardProps = {
+  item: { title: string; image: string; cta: string; };
+}
 
-
-class Card extends React.Component {
-  render() {
-    const { navigation, item, horizontal, full, style, ctaColor, imageStyle } = this.props;
-    
-    const imageStyles = [
-      full ? styles.fullImage : styles.horizontalImage,
-      imageStyle
-    ];
-    const cardContainer = [styles.card, styles.shadow, style];
-    const imgContainer = [styles.imageContainer,
-      horizontal ? styles.horizontalStyles : styles.verticalStyles,
-      styles.shadow
-    ];
+export default function Card ({ item }: CardProps){
+  const navigation=useNavigation();
 
     return (
-      <Block row={horizontal} card flex style={cardContainer}>
+      <View style={{flex:1}}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro')}>
-          <Block flex style={imgContainer}>
-            <Image source={{uri: item.image}} style={imageStyles} />
-          </Block>
+          <View style={{flex:1}} >
+             <Image source={{uri: item.image}} style={styles.fullImage} />
+          </View>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro')}>
-          <Block flex space="between" style={styles.cardDescription}>
-            <Text size={14} style={styles.cardTitle}>{item.title}</Text>
-            <Text size={12} muted={!ctaColor} color={ctaColor || argonTheme.COLORS.ACTIVE} bold>{item.cta}</Text>
-          </Block>
+          <View style={styles.cardDescription}>
+            <Text style={styles.cardTitle}>{item.title}</Text>
+          </View>
         </TouchableWithoutFeedback>
-      </Block>
+      </View>
     );
   }
-}
-
-Card.propTypes = {
-  item: PropTypes.object,
-  horizontal: PropTypes.bool,
-  full: PropTypes.bool,
-  ctaColor: PropTypes.string,
-  imageStyle: PropTypes.any,
-}
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: theme.COLORS.WHITE,
-    marginVertical: theme.SIZES.BASE,
     borderWidth: 0,
     minHeight: 114,
     marginBottom: 16
@@ -61,7 +39,8 @@ const styles = StyleSheet.create({
     paddingBottom: 6
   },
   cardDescription: {
-    padding: theme.SIZES.BASE / 2
+    flex:1,
+    justifyContent:'space-between'
   },
   imageContainer: {
     borderRadius: 3,
@@ -87,12 +66,9 @@ const styles = StyleSheet.create({
     height: 350
   },
   shadow: {
-    shadowColor: theme.COLORS.BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     shadowOpacity: 0.1,
     elevation: 2,
   },
 });
-
-export default withNavigation(Card);
