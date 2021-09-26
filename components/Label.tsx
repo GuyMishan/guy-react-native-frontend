@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   header: {
       
     fontSize: 38,
-    color: theme.colors.primary,
+    color: theme.colors.secondary,
     fontWeight: 'bold',
     paddingVertical: 14,
     marginTop : 24 ,
