@@ -10,12 +10,17 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
+import { argonTheme, Images } from "../constants";
 import TextInput from '../components/TextInput';
 import { theme } from '../constants/newTheme';
 import Button from '../components/Button/Button';
 import axios from 'axios';
 import { api } from '../config.json'
 import { useNavigation } from '@react-navigation/core';
+import Logo from '../components/Logo';
+import Label from '../components/Label';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 // import {
 //   emailValidator,
 //   passwordValidator,
@@ -39,103 +44,144 @@ const Register = () => {
     const passwordError = passwordValidator(password.value);
 
     if (emailError || passwordError || nameError) {
+
       setName({ ...name, error: nameError });
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
       return;
     }
-    
-    var metadata = { 'name': name.value  , 'email': email.value , 'password': password.value }
-      axios.post(`${api}/api/signup`, metadata)
-        .then(response => {
-          Alert.alert("Registered Succesfully");
-          console.log(response.data)
-        })
-        .catch((error) => {
-          Alert.alert("Register Unsuccesfull"
-          );
-          console.log(error);
-        })
+    var metadata = { 'name': name.value, 'email': email.value, 'password': password.value }
+    axios.post(`${api}/api/signup`, metadata)
+      .then(response => {
+        Alert.alert(
+          "Registered Succesfully",
+          [
+            { text: "Continue", onPress: () => console.log("Continue") }
+          ]
+        );
+        console.log(response.data)
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Register Unsuccesfull",
+          error
+          [
+          { text: "Try Again", onPress: () => console.log("Try Again") }
+          ]
+        );
+        console.log(error);
+      })
 
   }
 
 
-   const emailValidator = (email: string) => {
+  const emailValidator = (email: string) => {
     const re = /\S+@\S+\.\S+/;
-  
+
     if (!email || email.length <= 0) return 'Email cannot be empty.';
     if (!re.test(email)) return 'Ooops! We need a valid email address.';
-  
+
     return '';
   };
-  
-   const passwordValidator = (password: string) => {
+
+  const passwordValidator = (password: string) => {
     if (!password || password.length <= 0) return 'Password cannot be empty.';
-  
+
     return '';
   };
-  
-   const nameValidator = (name: string) => {
+
+  const nameValidator = (name: string) => {
     if (!name || name.length <= 0) return 'Name cannot be empty.';
-  
+
     return '';
-  }; 
+  };
   return (
-    <View>
+    <SafeAreaView style={{ flex: 0, justifyContent: 'center' ,  alignSelf : 'center'}}>
+      <ImageBackground
+        resizeMode="cover"
+        source={Images.RegisterBackground}
+        style={styles.image}>
+        <SafeAreaView style={{ flex: 0.25,  justifyContent: 'center', alignItems: 'stretch' , alignSelf : 'center'  }}>
+          <View style={styles.registerContainer} >
 
-      {/* <Logo />  Add Logo Commponent */}
+            <Label TextLabel="Create Account" />
 
-      {/* <Header>Create Account</Header> */}
+            <Logo width={170}
+              height={160}
+            />
 
-      <TextInput
-        label="Name"
-        returnKeyType="next"
-        value={name.value}
-        onChangeText={text => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
-      />
+            {/* <Header>Create Account</Header> */}
 
-      <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={text => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
+            <TextInput
+              label="Name"
+              returnKeyType="next"
+              value={name.value}
+              onChangeText={text => setName({ value: text, error: '' })}
+              error={!!name.error}
+              errorText={name.error}
+            />
 
-      <TextInput
-        label="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={text => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
-      />
+            <TextInput
+              label="Email"
+              returnKeyType="next"
+              value={email.value}
+              onChangeText={text => setEmail({ value: text, error: '' })}
+              error={!!email.error}
+              errorText={email.error}
+              autoCapitalize="none"
+              autoCompleteType="email"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+            />
 
-      <TouchableOpacity onPress={clicksubmit}>
-        <Button mode="contained" style={styles.button}>
-          Sign Up
-        </Button>
-      </TouchableOpacity>
+            <TextInput
+              label="Password"
+              returnKeyType="done"
+              value={password.value}
+              onChangeText={text => setPassword({ value: text, error: '' })}
+              error={!!password.error}
+              errorText={password.error}
+              secureTextEntry
+            />
 
-      <View style={styles.row}>
-        <Text style={styles.label}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.link}>Login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <TouchableOpacity onPress={clicksubmit}>
+              <Button ButonLabel="Sign Up" Width={130} />
+
+            </TouchableOpacity>
+
+            <View style={styles.row}>
+              <Text style={styles.label}>Already have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.link}>Login</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </SafeAreaView>
+      </ImageBackground>
+    </SafeAreaView>
+
   );
 };
 
 const styles = StyleSheet.create({
+  registerContainer: {
+    width: width * 0.9,
+    height: height * 0.875,
+    backgroundColor: "#F4F5F7",
+    borderRadius: 4,
+    paddingHorizontal : 15 ,
+    borderRadius : 30 , 
+    shadowColor: argonTheme.COLORS.BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowRadius: 8,
+    shadowOpacity: 0.1,
+    elevation: 1,
+    overflow: "hidden"
+  },
   label: {
     color: theme.colors.secondary,
   },
@@ -144,11 +190,17 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignSelf: 'center' ,
     marginTop: 4,
   },
   link: {
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
+  image: {
+    flex: 1,
+    justifyContent: "center",
+    width, height, zIndex: 1
+  }
 });
 export default Register;
