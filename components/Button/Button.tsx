@@ -1,23 +1,24 @@
 import React, { memo } from 'react';
 import styles from './ButtonStyle';
-import { Button as PaperButton } from 'react-native-paper';
-import { theme } from '../../constants/newTheme';
 
-type Props = React.ComponentProps<typeof PaperButton>;
+import AwesomeButton from "react-native-really-awesome-button";
 
-const Button = ({ mode, style, children, ...props }: Props) => (
-  <PaperButton
-    style={[
-      styles.button,
-      mode === 'outlined' && { backgroundColor: theme.colors.surface },
-      style,
-    ]}
-    labelStyle={styles.text}
-    mode={mode}
-    {...props}
+type Props = {
+  ButonLabel: string ,
+  Width : number
+};
+
+
+const Button = ({ ButonLabel, Width }: Props) => (
+  <AwesomeButton
+    progress={false}
+    style={styles.button}
+    width = {Width}
+
+    textSize =  {18}
   >
-    {children}
-  </PaperButton>
+  {ButonLabel} 
+  </AwesomeButton>
 );
 
 

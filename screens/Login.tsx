@@ -12,17 +12,18 @@ import {
   TouchableOpacity,
   SafeAreaView
 } from "react-native";
-
+import Button from '../components/Button/Button';
 import { Images, argonTheme } from "../constants";
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import { useNavigation } from '@react-navigation/core';
 
+
 const { width, height } = Dimensions.get("screen");
 
 const Login = () => {
-  const navigation=useNavigation();
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false)
   const [formdata, setFormdata] = useState<any>([])
 
@@ -67,87 +68,99 @@ const Login = () => {
     }
   }
 
+  /*async function ClearPrevUserData()//nneds to be on signout
+{
+  try {
+    await AsyncStorage.removeItem('user_id_token');
+  } catch (error) {
+    console.log('AsyncStorage error: ' + error.message);
+  }
+}*/
+
   useEffect(() => {
     CheckIfUserIsSigned()
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1,alignItems: 'center',justifyContent: 'center', }}>
+    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
       <ImageBackground
         resizeMode="cover"
         source={Images.RegisterBackground}
         style={styles.image}>
-        <SafeAreaView style={{ flex: 0.25,alignItems: 'center',justifyContent: 'center', }}>
+        <SafeAreaView style={{ flex: 0.25, alignItems: 'center', justifyContent: 'center', }}>
           <View style={styles.registerContainer}>
             <View style={styles.socialConnect}>
               <Text style={{ color: "#8898AA" }}>
                 Sign in with
-                </Text>
-              <View style={{ flex: 1,flexDirection: 'row' }}>
-                <View style={{ flex: 1,alignItems: 'center',justifyContent: 'center', }}>
+              </Text>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
                   <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
                     <View>
-                     <Text>sdsd</Text>
+                      <Text>sdsd</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
-                <View style={{ flex: 1 ,alignItems: 'center',justifyContent: 'center',}} >
-                <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }} >
+                  <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
                     <View>
-                     <Text>sdsd</Text>
+                      <Text>sdsd</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
-                <View style={{ flex: 1,alignItems: 'center',justifyContent: 'center', }}>
-                <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                  <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
                     <View>
-                     <Text>sdsd</Text>
+                      <Text>sdsd</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
-            <View style={{ flex: 0.25,alignItems: 'center',justifyContent: 'center', }}>
+            <View style={{ flex: 0.25, alignItems: 'center', justifyContent: 'center', }}>
               <View style={{ flex: 1 }} >
                 <Text style={{ color: "#8898AA" }} >
                   Or sign in the classic way
-                  </Text>
+                </Text>
               </View>
               <View style={{ flex: 1 }}>
-                  <View style={{ marginBottom: 15, width: width * 0.8 }}>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Email"
-                      onChangeText={text => setFormdata({ ...formdata, email: text })}
-                      value={formdata.name}
-                    />
-                  </View>
-                  <View style={{ marginBottom: 15, width: width * 0.8 }}>
-                    <TextInput
-                      style={styles.input}
-                      secureTextEntry={true}
-                      placeholder="Password"
-                      onChangeText={text => setFormdata({ ...formdata, password: text })}
-                      value={formdata.password}
-                    />
-                    <ActivityIndicator
-                      animating={loading}
-                      color="#0000ff"
-                      size="large" />
-                  </View>
-                  <View style={{ paddingTop: 35, flex: 1,alignItems: 'center',justifyContent: 'center' }}>
-                    <TouchableOpacity style={styles.button} onPress={() => clicksubmit()}>
-                    <View>
-                     <Text>LOGIN</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <View style={{ paddingTop: 35, flex: 1,alignItems: 'center',justifyContent: 'center' }}>
-                  <Text onPress={() => navigation.navigate('Account')}>
-                    Don't have an account? sign up
-                  </Text>
+                <View style={{ marginBottom: 15, width: width * 0.8 }}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    onChangeText={text => setFormdata({ ...formdata, email: text })}
+                    value={formdata.name}
+                  />
                 </View>
+                <View style={{ marginBottom: 15, width: width * 0.8 }}>
+                  <TextInput
+                    style={styles.input}
+                    secureTextEntry={true}
+                    placeholder="Password"
+                    onChangeText={text => setFormdata({ ...formdata, password: text })}
+                    value={formdata.password}
+                  />
+                  <ActivityIndicator
+                    animating={loading}
+                    color="#0000ff"
+                    size="large" />
+                </View>
+                <View  >
+                  <View >
+                    <TouchableOpacity onPress={() => clicksubmit()}>
+                      <Button ButonLabel="Login" Width={130} />
+                    </TouchableOpacity>
                   </View>
+                  <View >
+                    <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+                      <Text style={{ fontSize: 20 , alignSelf : 'center' }}>
+                        Don't have an account? sign up
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
+
             </View>
           </View>
         </SafeAreaView>

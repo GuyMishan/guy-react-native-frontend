@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Dimensions, ScrollView, Text, View } from 'react-native';
 import { Block, theme } from 'galio-framework';
 
-import { Card } from '../components';
+import Card from '../components/Card';
 import articles from '../constants/articles';
 import axios from 'axios'
 import { AsyncStorage } from 'react-native';
