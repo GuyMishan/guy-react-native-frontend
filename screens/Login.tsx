@@ -67,15 +67,6 @@ const Login = () => {
     }
   }
 
-    /*async function ClearPrevUserData()//nneds to be on signout
-  {
-    try {
-      await AsyncStorage.removeItem('user_id_token');
-    } catch (error) {
-      console.log('AsyncStorage error: ' + error.message);
-    }
-  }*/
-
   useEffect(() => {
     CheckIfUserIsSigned()
   }, [])

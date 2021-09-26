@@ -9,11 +9,12 @@ import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import Footer from '../components/Footer'
 import { Header } from "../components";
+import { BackHandler } from 'react-native';
 
 const { width } = Dimensions.get('screen');
 
 const Home = () => {
-
+  
   const renderArticles = () => {
     return (
       <>
