@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: theme.colors.secondary,
+    fontSize: 18
   },
   button: {
     marginTop: 24,
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
   link: {
     fontWeight: 'bold',
     color: theme.colors.primary,
+    fontSize: 18
   },
   image: {
     flex: 1,
