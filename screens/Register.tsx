@@ -55,9 +55,6 @@ const Register = () => {
       .then(response => {
         Alert.alert(
           "Registered Succesfully",
-          [
-            { text: "Continue", onPress: () => console.log("Continue") }
-          ]
         );
         console.log(response.data)
       })
@@ -65,9 +62,6 @@ const Register = () => {
         Alert.alert(
           "Register Unsuccesfull",
           error
-          [
-          { text: "Try Again", onPress: () => console.log("Try Again") }
-          ]
         );
         console.log(error);
       })
@@ -146,7 +140,6 @@ const Register = () => {
 
             <TouchableOpacity onPress={clicksubmit}>
               <Button ButonLabel="Sign Up" Width={130} />
-
             </TouchableOpacity>
 
             <View style={styles.row}>
@@ -169,7 +162,6 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: height * 0.875,
     backgroundColor: "#F4F5F7",
-    borderRadius: 4,
     paddingHorizontal : 15 ,
     borderRadius : 30 , 
     shadowColor: argonTheme.COLORS.BLACK,

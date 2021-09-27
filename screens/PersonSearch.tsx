@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Dimensions, ScrollView, Text, View, FlatList, Image, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Block, theme } from 'galio-framework';
+import { StyleSheet, Dimensions, ScrollView, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
 import { Button as GaButton } from "galio-framework";
-
-import { Card } from '../components';
 import { Images, argonTheme } from "../constants";
 import axios from 'axios'
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
-import Icon from '../components/Icon';
-import Input from '../components/Input';
 import Footer from '../components/Footer'
 import { Header } from "../components";
+import TextInput from '../components/TextInput';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get("screen");
 
 const PersonSearch = ({ navigation }: { navigation: any }) => {
-  const [user, SetUser] = useState([])
+  const [user, SetUser] = useState<any>([])
 
   const [search, setSearch] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]); //users
   const [masterDataSource, setMasterDataSource] = useState([]); //users
 
   async function Getuserbytoken() {
+    var gettoken;
     try {
-      var gettoken = await AsyncStorage.getItem('user_id_token')
+      gettoken = await AsyncStorage.getItem('user_id_token')
     } catch (error) {
       console.log('AsyncStorage error: ' + error.message);
     }
@@ -38,7 +36,7 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
       })
   }
 
-  async function SendFriendRequest(userid) {
+  async function SendFriendRequest(userid:any) {
     axios.post(`${api}/api/friendrequest`, { send_user: user._id, recieved_user: userid })
       .then(response => {
         var tempres = response;
@@ -61,8 +59,8 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
       })
   }
 
-  async function CancelFriendRequest(userid) {
-    let tempfriendrequestid;
+  async function CancelFriendRequest(userid:any) {
+    let tempfriendrequestid :any;
     for (let i = 0; i < user.friendrequests_sent_data.length; i++) {
       if (user.friendrequests_sent_data[i].recieved_user == userid) {
         tempfriendrequestid = user.friendrequests_sent_data[i]._id
@@ -90,25 +88,25 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
       console.log({ userid: userid, friendrequestid: tempfriendrequestid })
   }
 
-  async function onuserclick(userid1) {
+  async function onuserclick(userid1:any) {
     navigation.navigate('Profile', { userid: userid1, })
   }
 
-  function isuseralreadyfriendrequested(userid) { //states= {0=no friend whatsoever,1=i requested friend,2=he requested friend,3=already friends(unfriend)}
-    if (user.friendrequests_sent_data.some(friendrequest_sent_data => friendrequest_sent_data.recieved_user === userid)) {
+  function isuseralreadyfriendrequested(userid:any) { //states= {0=no friend whatsoever,1=i requested friend,2=he requested friend,3=already friends(unfriend)}
+    if (user.friendrequests_sent_data.some(({friendrequest_sent_data}:any) => friendrequest_sent_data.recieved_user === userid)) {
       return 1;
     }
-    if (user.friendrequests_recieved_data.some(friendrequest_recieved_data => friendrequest_recieved_data.send_user === userid)) {
+    if (user.friendrequests_recieved_data.some(({friendrequest_recieved_data}:any) => friendrequest_recieved_data.send_user === userid)) {
       return 2;
     }
-    /*if(user.friends.some(friend=>friend._id===userid))
+    if(/*user.friends.some(friend=>friend._id===userid)*/false)
     {
       return 3;
-    }*/
+    }
     return 0;
   }
 
-  function Item({ item }) {
+  function Item({ item }:any) {
     return (
       <>
         {user._id != item._id ?
@@ -123,43 +121,43 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
               <View style={{ justifyContent: 'center', alignItems: "center", flex: 1 }}>
                 {isuseralreadyfriendrequested(item._id) == 0 ? //more than true/false.. write down states!!!
                   <GaButton color="info" style={{ width: '80%', height: '40%' }} onPress={() => SendFriendRequest(item._id)}>
-                    <Text bold>
+                    <Text>
                       Add Friend
                     </Text>
                   </GaButton>
                   : isuseralreadyfriendrequested(item._id) == 1 ?
                     <GaButton color="#808080" style={{ width: '80%', height: '40%' }} onPress={() => CancelFriendRequest(item._id)}>
-                      <Text bold>
+                      <Text>
                         Sent Request
                   </Text>
                     </GaButton>
                     : isuseralreadyfriendrequested(item._id) == 2 ?
                       <GaButton color="success" style={{ width: '80%', height: '40%' }} /*onPress={() => AcceptFriendRequest(item._id)}*/>
-                        <Text bold>
+                        <Text>
                           Accept Request
                   </Text>
                       </GaButton>
                       : isuseralreadyfriendrequested(item._id) == 3 ?
                         <GaButton color="error" style={{ width: '80%', height: '40%' }} /*onPress={() => UnFriendRequest(item._id)}*/>
-                          <Text bold>
+                          <Text>
                             Unfriend
                   </Text>
                         </GaButton>
                         : null}
               </View>
             </TouchableOpacity>
-            <Block style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
+            <View style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
           </>
           : null}
       </>
     );
   }
 
-  const searchFilterFunction = (text) => {
+  const searchFilterFunction = (text:any) => {
     // Check if searched text is not blank
     if (text) {
       // Inserted text is not blank , Filter the masterDataSource, Update FilteredDataSource
-      const newData = masterDataSource.filter(function (item) {
+      const newData = masterDataSource.filter(function (item:any) {
         const itemData = item.name
           ? item.name.toUpperCase()
           : ''.toUpperCase();
@@ -192,34 +190,31 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
   }, [])
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1}}>
       <Header />
       <View style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>
-          <Input
+          <TextInput
             right
-            color="black"
             style={styles.search}
             placeholder="Who are you looking for?"
             placeholderTextColor={'#8898AA'}
-            iconContent={<Icon size={16} name="search-zoom-in" family="ArgonExtra" />}
-            onChangeText={(text) => searchFilterFunction(text)}
-            onClear={(text) => searchFilterFunction('')}
+            onChangeText={(text:any) => searchFilterFunction(text)}
+            // onClear={() => searchFilterFunction('')}
             value={search}
-          />
-          <Block style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
+            />
+          <View style={{ borderColor: "rgba(0,0,0,0.2)", width: '100%', borderWidth: StyleSheet.hairlineWidth }} />
           {search.length >= 2 ?
             <FlatList
               style={{ flex: 1 }}
               data={filteredDataSource}
-              renderItem={({ item }) => <Item item={item} />}
-              keyExtractor={item => item._id}
+              renderItem={({ item }:any) => <Item item={item} />}
+              keyExtractor={(item:any) => item._id}
             /> : null}
-
         </SafeAreaView>
-        <Footer navigation={navigation} />
+        <Footer/>
       </View>
-    </>
+    </SafeAreaView>
   );
 }
 

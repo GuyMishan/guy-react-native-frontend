@@ -9,7 +9,7 @@ import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import Footer from '../components/Footer'
 import { Header } from "../components";
-import { BackHandler } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('screen');
 
@@ -53,13 +53,13 @@ const Home = () => {
   }, [])
 
     return (
-      <>
+      <SafeAreaView style={{ flex: 1}}>
       <Header/>
       <View style={{ flex: 1 }}>
         {renderArticles()}
         <Footer/>
       </View>
-      </>
+      </SafeAreaView>
     );
   }
 
