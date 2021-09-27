@@ -144,10 +144,12 @@ const Register = () => {
               secureTextEntry
             />
 
-            <TouchableOpacity onPress={clicksubmit}>
-              <Button ButonLabel="Sign Up" Width={130} />
-
-            </TouchableOpacity>
+           
+              <Button 
+                ButonLabel="Sign Up"
+                Width={130} 
+                OnClick={clicksubmit}
+                /> 
 
             <View style={styles.row}>
               <Text style={styles.label}>Already have an account? </Text>
@@ -169,7 +171,6 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: height * 0.875,
     backgroundColor: "#F4F5F7",
-    borderRadius: 4,
     paddingHorizontal : 15 ,
     borderRadius : 30 , 
     shadowColor: argonTheme.COLORS.BLACK,

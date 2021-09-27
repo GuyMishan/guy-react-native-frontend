@@ -147,9 +147,11 @@ const Login = () => {
                 </View>
                 <View  >
                   <View >
-                    <TouchableOpacity onPress={() => clicksubmit()}>
-                      <Button ButonLabel="Login" Width={130} />
-                    </TouchableOpacity>
+                      <Button ButonLabel="Login"
+                       Width={130}
+                       OnClick = {clicksubmit}
+                      />
+                   
                   </View>
                   <View >
                     <TouchableOpacity onPress={() => navigation.navigate('Account')}>
