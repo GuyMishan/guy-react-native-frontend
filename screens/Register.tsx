@@ -138,9 +138,11 @@ const Register = () => {
               secureTextEntry
             />
 
-            <TouchableOpacity onPress={clicksubmit}>
-              <Button ButonLabel="Sign Up" Width={130} />
-            </TouchableOpacity>
+              <Button 
+                ButonLabel="Sign Up"
+                Width={130} 
+                OnClick={clicksubmit}
+                /> 
 
             <View style={styles.row}>
               <Text style={styles.label}>Already have an account? </Text>

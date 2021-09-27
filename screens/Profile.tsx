@@ -70,10 +70,10 @@ function Profile({ route }: any) {
                 style={{ marginTop: 20, paddingBottom: 24 }}
               >
                 <TouchableOpacity>
-                  <Button ButonLabel="CONNECT" Width={130} />
+                  <Button ButonLabel="CONNECT" Width={130} OnClick={()=>null}/>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Button ButonLabel="MESSAGE" Width={130} />
+                  <Button ButonLabel="MESSAGE" Width={130} OnClick={()=>null}/>
                 </TouchableOpacity>
               </Block>
               <Block row space="between">

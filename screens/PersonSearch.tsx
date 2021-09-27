@@ -193,7 +193,7 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
     <SafeAreaView style={{ flex: 1}}>
       <Header />
       <View style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <TextInput
             right
             style={styles.search}
@@ -211,7 +211,7 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
               renderItem={({ item }:any) => <Item item={item} />}
               keyExtractor={(item:any) => item._id}
             /> : null}
-        </SafeAreaView>
+        </View>
         <Footer/>
       </View>
     </SafeAreaView>
