@@ -3,12 +3,10 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
-  KeyboardAvoidingView,
   Alert,
   ActivityIndicator,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   SafeAreaView
 } from "react-native";
@@ -18,18 +16,25 @@ import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import { useNavigation } from '@react-navigation/core';
+import Label from '../components/Label';
+import TextInput from '../components/TextInput';
+import Logo from '../components/Logo';
+import { theme } from '../constants/newTheme';
 
 
 const { width, height } = Dimensions.get("screen");
 
+
 const Login = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false)
-  const [formdata, setFormdata] = useState<any>([])
+  const [email, setEmail] = useState({ value: '', error: '' });
+  const [password, setPassword] = useState({ value: '', error: '' });
 
   const clicksubmit = async () => {
+    var metadata = { 'email': email.value, 'password': password.value }
     setLoading(true);
-    axios.post(`${api}/api/signin`, formdata)
+    axios.post(`${api}/api/signin`, metadata)
       .then(response => {
         setLoading(false);
         StoreUserData(response.data._id);
@@ -47,10 +52,10 @@ const Login = () => {
       })
   }
 
-  async function StoreUserData(user_id: any) {
+  async function StoreUserData(user_id: string) {
     try {
       await AsyncStorage.setItem('user_id_token', user_id);
-    } catch (error) {
+    } catch (error: any) {
       console.log('AsyncStorage error: ' + error.message);
     }
     navigation.navigate('Home')
@@ -63,7 +68,7 @@ const Login = () => {
       if (gettoken != null) {
         navigation.navigate('Home')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('AsyncStorage error: ' + error.message);
     }
   }
@@ -89,56 +94,27 @@ const Login = () => {
         style={styles.image}>
         <SafeAreaView style={{ flex: 0.25, alignItems: 'center', justifyContent: 'center', }}>
           <View style={styles.registerContainer}>
-            <View style={styles.socialConnect}>
-              <Text style={{ color: "#8898AA" }}>
-                Sign in with
-              </Text>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                  <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
-                    <View>
-                      <Text>sdsd</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }} >
-                  <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
-                    <View>
-                      <Text>sdsd</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                  <TouchableOpacity style={styles.socialButtons} onPress={() => Alert.alert('Simple Button pressed')}>
-                    <View>
-                      <Text>sdsd</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+            <Label TextLabel="Login" />
+            <Logo width={170}
+              height={160}
+            />
             <View style={{ flex: 0.25, alignItems: 'center', justifyContent: 'center', }}>
-              <View style={{ flex: 1 }} >
-                <Text style={{ color: "#8898AA" }} >
-                  Or sign in the classic way
-                </Text>
-              </View>
+
               <View style={{ flex: 1 }}>
-                <View style={{ marginBottom: 15, width: width * 0.8 }}>
+                <View >
                   <TextInput
-                    style={styles.input}
+
                     placeholder="Email"
-                    onChangeText={text => setFormdata({ ...formdata, email: text })}
-                    value={formdata.name}
+                    onChangeText={text => setEmail({ value: text, error: '' })}
+                    value={email.value}
                   />
-                </View>
-                <View style={{ marginBottom: 15, width: width * 0.8 }}>
+
                   <TextInput
-                    style={styles.input}
+
                     secureTextEntry={true}
                     placeholder="Password"
-                    onChangeText={text => setFormdata({ ...formdata, password: text })}
-                    value={formdata.password}
+                    onChangeText={text => setPassword({ value: text, error: '' })}
+                    value={password.value}
                   />
                   <ActivityIndicator
                     animating={loading}
@@ -147,17 +123,16 @@ const Login = () => {
                 </View>
                 <View  >
                   <View >
-                      <Button ButonLabel="Login"
-                       Width={130}
-                       OnClick = {clicksubmit}
-                      />
-                   
+                    <Button ButonLabel="Login"
+                      Width={130}
+                      OnClick={clicksubmit}
+                    />
+
                   </View>
-                  <View >
+                  <View style={styles.row}>
+                    <Text style={styles.label}>Dont have an account ? </Text>
                     <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-                      <Text style={{ fontSize: 20 , alignSelf : 'center' }}>
-                        Don't have an account? sign up
-                      </Text>
+                      <Text style={styles.link}>Sign Up</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -176,46 +151,32 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: height * 0.875,
     backgroundColor: "#F4F5F7",
-    borderRadius: 4,
+    borderRadius: 40,
     shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
       height: 4
     },
-    shadowRadius: 8,
-    shadowOpacity: 0.1,
+    shadowRadius: 80,
+    shadowOpacity: 1,
     elevation: 1,
     overflow: "hidden"
   },
-  socialConnect: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 0.25,
-    backgroundColor: argonTheme.COLORS.WHITE,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: "#8898AA"
+  row: {
+    flexDirection: 'row',
+    alignSelf: 'center' ,
+    marginTop: 4,
   },
-  socialButtons: {
-    width: 120,
-    height: 40,
-    backgroundColor: "#fff",
-    shadowColor: argonTheme.COLORS.BLACK,
-    shadowOffset: {
-      width: 0,
-      height: 4
-    },
-    shadowRadius: 8,
-    shadowOpacity: 0.1,
-    elevation: 1
+  label: {
+    color: theme.colors.secondary,
+    fontSize: 18
   },
-  socialTextButtons: {
-    color: argonTheme.COLORS.PRIMARY,
-    fontWeight: "800",
-    fontSize: 14
+  link: {
+    fontWeight: 'bold',
+    color: theme.colors.primary,
+    fontSize: 18
   },
-  inputIcons: {
-    marginRight: 12
-  },
+
   passwordCheck: {
     direction: 'ltr'
   },
@@ -228,12 +189,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width, height, zIndex: 1
   },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
+
   button: {
     width: 120,
     height: 40,

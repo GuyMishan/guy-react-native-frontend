@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
   button: {
     
     marginVertical: 10,
-    alignSelf: 'center'
+    alignSelf: 'center' ,
+    marginBottom: 20
   },
   text: {
     fontWeight: 'bold',
