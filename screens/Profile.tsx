@@ -20,7 +20,7 @@ import axios from 'axios'
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import { useIsFocused } from '@react-navigation/native'
-import { Header } from "../components";
+import Header  from "../components/Header";
 import { useNavigation } from '@react-navigation/core';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

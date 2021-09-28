@@ -2,19 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 import {
     StyleSheet,
-    ImageBackground,
-    Dimensions,
-    StatusBar,
-    KeyboardAvoidingView,
-    Alert,
     View,
     Image,
-    Text,
     TouchableOpacity
 } from "react-native";
 
 import { Images } from "../constants";
-import Icon from './Icon';
 import argonTheme from '../constants/Theme';
 
 import axios from 'axios';

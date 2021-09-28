@@ -6,7 +6,7 @@ import axios from 'axios'
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import Footer from '../components/Footer'
-import { Header } from "../components";
+import  Header  from "../components/Header";
 import TextInput from '../components/TextInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

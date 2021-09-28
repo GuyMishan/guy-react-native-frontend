@@ -2,7 +2,9 @@ import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
 import { TouchableOpacity, StyleSheet, Platform, Dimensions, View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Entypo } from '@expo/vector-icons';
+import { color } from 'react-native-reanimated';
+import { theme } from 'galio-framework';
 
 
 const Header = () => {
@@ -16,34 +18,53 @@ const Header = () => {
     /* return (navigation.navigate('Elements'));*/
   }
 
-  const handlePlusPress = () => {
-    /*return (navigation.navigate('Elements'));*/
+  const handleChatPress = () => {
+    return (navigation.navigate('Chat'));
+
   }
 
   return (
-    <View style={{ flexDirection: "row", height: 55, backgroundColor: "#FFFF", alignItems: 'center' }}>
+    <View style={styles.topbar}>
       <View style={{ flex: 1, flexDirection: 'row' }}>
-        <Ionicons name="menu" size={30} color="black" onPress={handleLeftPress} style={{ paddingRight: 10, paddingLeft: 5 }} />
-        <Ionicons name="heart" size={30} color="black" onPress={handleHeartPress} style={{ paddingRight: 10 }} />
-        <Ionicons name="add" size={30} color="black" onPress={handlePlusPress} />
+        <Ionicons name="menu" size={40} color="black" onPress={handleLeftPress} style={styles.openNavigationIcon} />
+        <Ionicons name="heart" size={40} color="black" onPress={handleHeartPress} style={styles.regularIcon} />
+        <Entypo name="chat" size={40} color="black" onPress={handleChatPress} style={styles.regularIcon} />
       </View>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      </View>
-      <View style={{ flex: 1 }}>
-        <View style={{ justifyContent: "center", alignItems: 'center' }}>
-          <Text>Myapplogo</Text>
-        </View>
+
+
+      <View style={styles.title}>
+        <Text style={styles.textTitle}>WingerX</Text>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    width: '100%',
-    fontSize: 20,
-    fontWeight: 'bold',
+  topbar: {
+    flexDirection: "row",
+    height: 55,
+    backgroundColor:theme.COLORS?.NAVBAR,
+    alignItems: 'center' ,
+    marginTop : 20 , 
   },
+  title: {
+    justifyContent: "center",
+    alignItems: 'center',
+    flex: 1 ,
+  } ,
+  textTitle: {
+    fontSize : 28 ,
+    fontWeight : 'bold' ,
+    color : theme.COLORS?.PRIMARY
+  } ,
+  openNavigationIcon : { 
+    paddingRight: 10,
+    paddingLeft: 10 
+  } ,
+  regularIcon : { 
+    paddingRight: 10,
+    
+  } ,
 });
 
-export default (Header);
+export default Header;

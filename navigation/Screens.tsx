@@ -4,9 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 // screens
-import Onboarding from "../screens/Onboarding";
+
 import Profile from "../screens/Profile";
 //new screens
+import Chats from "../screens/Chats";
 import Home from "../screens/Home";
 import Register from "../screens/Register";
 import Login from "../screens/Login";
@@ -21,6 +22,7 @@ export default function AppStack() {
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent/>}
       initialRouteName="Login">
+      <Drawer.Screen name="Chat" component={Chats} />
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="Account" component={Register} />
