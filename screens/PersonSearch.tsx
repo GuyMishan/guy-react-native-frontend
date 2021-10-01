@@ -6,7 +6,7 @@ import axios from 'axios'
 import { AsyncStorage } from 'react-native';
 import { api } from '../config.json'
 import Footer from '../components/Footer'
-import  Header  from "../components/Header";
+import Header from "../components/Header";
 import TextInput from '../components/TextInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -36,7 +36,7 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
       })
   }
 
-  async function SendFriendRequest(userid:any) {
+  async function SendFriendRequest(userid: any) {
     axios.post(`${api}/api/friendrequest`, { send_user: user._id, recieved_user: userid })
       .then(response => {
         var tempres = response;
@@ -59,7 +59,7 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
       })
   }
 
-  async function CancelFriendRequest(userid:any) {
+  async function CancelFriendRequest(userid: any) {
     let tempfriendrequestid;
     for (let i = 0; i < user.friendrequests_sent_data.length; i++) {
       if (user.friendrequests_sent_data[i].recieved_user == userid) {
@@ -88,18 +88,74 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
     console.log({ userid: userid, friendrequestid: tempfriendrequestid })
   }
 
-  async function onuserclick(userid1:any) {
+  async function AcceptFriendRequest(userid: any) { //delete both friend requests from users.delete friend request from friend request. add to user+other user friend(user to friend array)
+    let tempfriendrequestid;
+    for (let i = 0; i < user.friendrequests_recieved_data.length; i++) {
+      if (user.friendrequests_recieved_data[i].send_user == userid) {
+        tempfriendrequestid = user.friendrequests_recieved_data[i]._id
+      }
+    }
+    axios.post(`${api}/api/user/deleterecievedfriendrequest`, { userid: user._id, friendrequestid: tempfriendrequestid })
+      .then(response => {
+        axios.post(`${api}/api/user/deletesentfriendrequest`, { userid: userid, friendrequestid: tempfriendrequestid })
+          .then(response => {
+            axios.post(`${api}/api/friendrequest/remove/${tempfriendrequestid}`)
+              .then(response => {
+                axios.post(`${api}/api/user/addfriend`, { userid: user._id, friend: userid })
+                  .then(response => {
+                    axios.post(`${api}/api/user/addfriend`, { userid: userid, friend: user._id })
+                      .then(response => {
+                        Getuserbytoken()
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      })
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  })
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  async function UnFriend(userid: any) { //delete both friend from user&friend from userid.
+    axios.post(`${api}/api/user/unfriend`, { userid: user._id, friend: userid })
+      .then(response => {
+        axios.post(`${api}/api/user/unfriend`, { userid: userid, friend: user._id })
+          .then(response => {
+            Getuserbytoken()
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  async function onuserclick(userid1: any) {
     navigation.navigate('Profile', { userid: userid1, })
   }
 
-  function isuseralreadyfriendrequested(userid:any) { //states= {0=no friend whatsoever,1=i requested friend,2=he requested friend,3=already friends(unfriend)}
-    if (user.friendrequests_sent_data.some(( friendrequest_sent_data ) => friendrequest_sent_data.recieved_user === userid)) {
+  function isuseralreadyfriendrequested(userid: any) { //states= {0=no friend whatsoever,1=i requested friend,2=he requested friend,3=already friends(unfriend)}
+    if (user.friendrequests_sent_data.some((friendrequest_sent_data) => friendrequest_sent_data.recieved_user === userid)) {
       return 1;
     }
-    if (user.friendrequests_recieved_data.some(( friendrequest_recieved_data ) => friendrequest_recieved_data.send_user === userid)) {
+    if (user.friendrequests_recieved_data.some((friendrequest_recieved_data) => friendrequest_recieved_data.send_user === userid)) {
       return 2;
     }
-    if (/*user.friends.some(friend=>friend._id===userid)*/false) {
+    if ((user.friends)&&(user.friends.some(friend => friend === userid))) {
       return 3;
     }
     return 0;
@@ -121,28 +177,26 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
                 {isuseralreadyfriendrequested(item._id) == 0 ? //more than true/false.. write down states!!!
                   <Button
                     ButonLabel="Add Friend"
-                    Width={80}
-                    OnClick={()=>SendFriendRequest(item._id)}
+                    Width={120}
+                    OnClick={() => SendFriendRequest(item._id)}
                   />
                   : isuseralreadyfriendrequested(item._id) == 1 ?
                     <Button
                       ButonLabel="Cancel Request"
-                      Width={80}
-                      OnClick={()=>CancelFriendRequest(item._id)}
+                      Width={120}
+                      OnClick={() => CancelFriendRequest(item._id)}
                     />
                     : isuseralreadyfriendrequested(item._id) == 2 ?
                       <Button
                         ButonLabel="Accept Request"
-                        Width={80}
-                        OnClick={()=>null}
-                      /*onPress={AcceptFriendRequest(item._id)}*/
+                        Width={120}
+                        OnClick={() => AcceptFriendRequest(item._id)}
                       />
                       : isuseralreadyfriendrequested(item._id) == 3 ?
                         <Button
                           ButonLabel="Unfriend"
-                          Width={80}
-                          OnClick={()=>null}
-                        /*onPress={UnFriend(item._id)}*/
+                          Width={120}
+                          OnClick={() => UnFriend(item._id)}
                         />
                         : null}
               </View>
@@ -191,7 +245,7 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <>
       <Header />
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
@@ -215,7 +269,7 @@ const PersonSearch = ({ navigation }: { navigation: any }) => {
         </View>
         <Footer />
       </View>
-    </SafeAreaView>
+      </>
   );
 }
 

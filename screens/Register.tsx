@@ -90,7 +90,7 @@ const Register = () => {
     return '';
   };
   return (
-    <SafeAreaView style={{ flex: 0, justifyContent: 'center' ,  alignSelf : 'center'}}>
+    <View style={{ flex: 0, justifyContent: 'center' ,  alignSelf : 'center'}}>
       <ImageBackground
         resizeMode="cover"
         source={Images.RegisterBackground}
@@ -154,7 +154,7 @@ const Register = () => {
           </View>
         </SafeAreaView>
       </ImageBackground>
-    </SafeAreaView>
+    </View>
 
   );
 };

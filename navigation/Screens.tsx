@@ -12,6 +12,8 @@ import Home from "../screens/Home";
 import Register from "../screens/Register";
 import Login from "../screens/Login";
 import PersonSearch from "../screens/PersonSearch";
+import ChatPersonSearch from "../screens/ChatPersonSearch";
+import ChatRoomScreen from "../screens/ChatRoomScreen";
 // drawer
 import CustomDrawerContent from "./Menu";
 
@@ -28,6 +30,8 @@ export default function AppStack() {
       <Drawer.Screen name="Account" component={Register} />
       <Drawer.Screen name="Login" component={Login} />
       <Drawer.Screen name="PersonSearch" component={PersonSearch} />
+      <Drawer.Screen name="ChatPersonSearch" component={ChatPersonSearch} />
+      <Drawer.Screen name="ChatRoomScreen" component={ChatRoomScreen} />
     </Drawer.Navigator>
   );
 }

@@ -50,7 +50,7 @@ function Profile({ route }: any) {
   }, [isFocused, route, navigation])
 
   return (
-    <SafeAreaView style={{ flex: 0, justifyContent: 'center' ,  alignSelf : 'center'}}>
+    <View style={{ flex: 0, justifyContent: 'center' ,  alignSelf : 'center'}}>
       <Header />
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -158,7 +158,7 @@ function Profile({ route }: any) {
           </Block>
         </ScrollView>
         <Footer />
-    </SafeAreaView>
+    </View>
   );
 }
 

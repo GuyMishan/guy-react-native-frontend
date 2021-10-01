@@ -53,13 +53,13 @@ const Home = () => {
   }, [])
 
     return (
-      <SafeAreaView style={{ flex: 1}}>
+      <>
       <Header/>
       <View style={{ flex: 1 }}>
         {renderArticles()}
         <Footer/>
       </View>
-      </SafeAreaView>
+      </>
     );
   }
 

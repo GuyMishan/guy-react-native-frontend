@@ -87,7 +87,7 @@ const Login = () => {
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
       <ImageBackground
         resizeMode="cover"
         source={Images.RegisterBackground}
@@ -142,7 +142,7 @@ const Login = () => {
           </View>
         </SafeAreaView>
       </ImageBackground>
-    </SafeAreaView>
+    </View>
   );
 }
 

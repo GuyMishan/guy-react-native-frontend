@@ -1,15 +1,31 @@
-import * as React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, SafeAreaView, StyleSheet, View, Dimensions } from 'react-native';
 import { ChatRoom } from "../types";
 import ChatListItem from '../components/ChatComponents/ChatListItem';
 import chatRooms from '../data/ChatRooms';
 import Header from '../components/Header';
+import TextInput from '../components/TextInput';
+import { Images, argonTheme } from "../constants";
+import { useNavigation } from '@react-navigation/core';
 
+const { width, height } = Dimensions.get("screen");
 
 const Chats = () => {
+    const navigation = useNavigation();
+
+    const OnTextInputFoccus = () => {
+        navigation.navigate('ChatPersonSearch')
+    };
     return (
-        <SafeAreaView style={styles.safaAreaStyle}>
+        <>
             <Header />
+            <TextInput
+                right
+                style={styles.search}
+                placeholder="Who are you looking for?"
+                placeholderTextColor={'#8898AA'}
+                onFocus={() => OnTextInputFoccus()}
+            />
             <View style={styles.container}>
                 <FlatList
                     style={{ width: '100%' }}
@@ -17,9 +33,8 @@ const Chats = () => {
                     renderItem={({ item }) => <ChatListItem chatRoom={item} />}
                     keyExtractor={(item) => item.id}
                 />
-
             </View>
-        </SafeAreaView>
+        </>
     );
 }
 
@@ -32,9 +47,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'white',
     },
-    safaAreaStyle: {
-        marginHorizontal : 10 , 
-        flex: 1 
-    }
+    search: {
+        height: 48,
+        width: width - 32,
+        marginHorizontal: 16,
+        borderWidth: 1,
+        borderRadius: 3,
+        borderColor: argonTheme.COLORS.BORDER
+    },
 
 });
