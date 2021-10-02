@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Dimensions, ScrollView, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
-import Button from '../components/Button/Button';
 import { Images, argonTheme } from "../constants";
 import axios from 'axios'
 import { AsyncStorage } from 'react-native';
@@ -31,6 +30,7 @@ const ChatPersonSearch = () => {
     }
     axios.post(`${api}/api/getuserbyid`, { userid: gettoken })
       .then(response => {
+        console.log(response.data)
         SetUser(response.data)
       })
       .catch((error) => {
@@ -44,12 +44,50 @@ const ChatPersonSearch = () => {
       })
   }
 
+  async function NewChatWithFriend(frienduserid: any) {
+    let tempchatid=null;
+    for (let i = 0; i < user.chats_data.length; i++) {
+      if ((user.chats_data[i].users.length == 2)&&((user.chats_data[i].users.some((tempuser :any) => tempuser === frienduserid)))) {
+        tempchatid = user.chats_data[i]._id
+      }
+    }
+    if(tempchatid!=null)//chat exists with user =>open chat
+    {
+      navigation.navigate('ChatRoomScreen', {
+        id: tempchatid,
+        friendid: frienduserid,
+      })
+    }
+    else{ //chat doesnt exists =>open new chat
+      axios.post(`${api}/api/chat`, { users: [user._id, frienduserid] })
+      .then(response => {
+        var tempres :any= response;
+        axios.post(`${api}/api/user/addchat`, { userid: user._id, chatid: response.data._id })
+          .then(response => {
+            axios.post(`${api}/api/user/addchat`, { userid: frienduserid, chatid: tempres.data._id })
+              .then(response => {
+                navigation.navigate('ChatRoomScreen', {
+                  id: tempres.data._id,
+                  friendid: frienduserid,
+                })
+                Getuserbytoken()
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    }
+  }
+
   async function onuserclick(userid1: any) {
-    navigation.navigate('ChatRoomScreen', {
-      id: 1,
-      //id: chatRoom.id,
-      name: user.name,
-    })
+    NewChatWithFriend(userid1)
   }
 
   function Item({ item }: any) {
@@ -95,8 +133,8 @@ const ChatPersonSearch = () => {
     }
   };
 
-  async function LoadUserFriends() {
-    axios.post(`${api}/api/user/loadfriends`,{userid:user._id}) //need to make!!
+  function LoadUserFriends() {
+    axios.post(`${api}/api/user/loadfriends`, { userid: user._id }) //need to make!!
       .then(response => {
         setFilteredDataSource(response.data);
         setMasterDataSource(response.data);

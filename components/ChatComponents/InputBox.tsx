@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform,} from "react-native";
 import { StyleSheet } from "react-native";
+import { useIsFocused } from '@react-navigation/native'
 
 import {
   MaterialCommunityIcons,
@@ -10,23 +11,16 @@ import {
   Fontisto,
 } from '@expo/vector-icons';
 
-const InputBox = (props) => {
+const InputBox = (props:any) => {
+  const isFocused = useIsFocused()
 
   const { chatRoomID } = props;
+  const { myUserId } = props;
 
   const [message, setMessage] = useState('');
-  const [myUserId, setMyUserId] = useState(null);
-
-  useEffect(() => {
-    /*const fetchUser = async () => {
-      const userInfo = await Auth.currentAuthenticatedUser();
-      setMyUserId(userInfo.attributes.sub);
-    }
-    fetchUser();*/
-  }, [])
 
   const onMicrophonePress = () => {
-   // console.warn('Microphone')
+    console.log('Microphone')
   }
 
   const updateChatRoomLastMessage = async (messageId: string) => {
@@ -69,13 +63,13 @@ const InputBox = (props) => {
   }
 
   const onPress = () => {
-   /* if (!message) {
+    if (!message) {
       onMicrophonePress();
     } else {
       onSendPress();
-    }*/
+    }
   }
-
+  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -98,8 +92,8 @@ const InputBox = (props) => {
       <TouchableOpacity onPress={onPress}>
         <View style={styles.buttonContainer}>
           {!message
-            ? <MaterialCommunityIcons name="microphone" size={28} color="white" />
-            : <MaterialIcons name="send" size={28} color="white" />}
+            ? <MaterialCommunityIcons name="microphone" size={28} color="grey" />
+            : <MaterialIcons name="send" size={28} color="grey" />}
         </View>
       </TouchableOpacity>
       </View>

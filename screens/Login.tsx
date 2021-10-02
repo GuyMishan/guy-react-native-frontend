@@ -21,9 +21,11 @@ import TextInput from '../components/TextInput';
 import Logo from '../components/Logo';
 import { theme } from '../constants/newTheme';
 
+import io from 'socket.io-client'
+import {localApi,chatPort} from '../config.json'
 
 const { width, height } = Dimensions.get("screen");
-
+const ENDPOINT =`${localApi}:${chatPort}`
 
 const Login = () => {
   const navigation = useNavigation();
@@ -57,6 +59,18 @@ const Login = () => {
       await AsyncStorage.setItem('user_id_token', user_id);
     } catch (error: any) {
       console.log('AsyncStorage error: ' + error.message);
+    }
+    ConnectUserToSocket(user_id);
+  }
+
+  async function ConnectUserToSocket(user_id: string) {
+    try {
+     const socket =io(ENDPOINT);
+     socket.on("Chat message",(msg:any)=>{
+       console.log(msg)
+     })
+    } catch (error: any) {
+      console.log('error: ' + error.message);
     }
     navigation.navigate('Home')
   }
