@@ -9,13 +9,34 @@ import { api } from '../config.json'
 import ChatMessage from "../components/ChatComponents/ChatMessage";
 import InputBox from "../components/ChatComponents/InputBox";
 import HeaderBackOnly from "../components/HeaderBackOnly";
+import { io } from 'socket.io-client';
 
 const ChatRoomScreen = () => {
+  const [, forceUpdate] = useState();
+
   const isFocused = useIsFocused()
   const route = useRoute();
 
   const [messages, setMessages] = useState([]);
   const [myId, setMyId] = useState(null);
+
+  const socket = io(`https://guy-react-native-backend.herokuapp.com`).connect();
+
+  socket.on('message', data => {
+    console.log(data)
+  })
+
+  socket.on('loadchatmessagesfromdb', data => {
+    setMessages(data[0].messages_data);
+    //console.log(data[0].messages_data)
+  })
+
+  socket.on('pushmessagetoscreen', data => {
+    var tempmessages=messages;
+    tempmessages.push(data);
+    setMessages(tempmessages);
+    forceUpdate(data._id)
+  })
 
   async function Getuserbytoken() {
     var gettoken;
@@ -37,59 +58,23 @@ const ChatRoomScreen = () => {
     Getuserbytoken();
   }, [])
 
-  const fetchMessages = async () => {
-    /* const messagesData = await API.graphql(
-       graphqlOperation(
-         messagesByChatRoom, {
-           chatRoomID: route.params.id,
-           sortDirection: "DESC",
-         }
-       )
-     )
-     console.log("FETCH MESSAGES")
-     setMessages(messagesData.data.messagesByChatRoom.items);*/
-  }
-
   useEffect(() => {
-    //fetchMessages();
-  }, [])
-
-  useEffect(() => {
-    /* const subscription = API.graphql(
-       graphqlOperation(onCreateMessage)
-     ).subscribe({
-       next: (data) => {
-         const newMessage = data.value.data.onCreateMessage;
- 
-         if (newMessage.chatRoomID !== route.params.id) {
-           console.log("Message is in another room!")
-           return;
-         }
- 
-         fetchMessages();
-         // setMessages([newMessage, ...messages]);
-       }
-     });
- 
-     return () => subscription.unsubscribe();*/
-  }, [])
-
-  //console.log(`messages in state: ${messages.length}`)
-
-  useEffect(() => {
-    console.log(route)
-  }, [isFocused])
+    if (route != undefined)
+      socket.emit('loadchatmessages', route.params.id)
+  }, [route,isFocused])
 
   return (
     <>
       <HeaderBackOnly />
+
       <FlatList
         data={messages}
-        renderItem={({ item }) => <ChatMessage myId={myId} message={item} />}
-        inverted
+        renderItem={({ item }) => <ChatMessage myId={myId} message={item}/>}
+        keyExtractor={(item, index) => index.toString()}
+        // inverted
       />
 
-      <InputBox chatRoomID={route.params.id} myUserId={myId}/>
+      <InputBox chatRoomID={route.params.id} myUserId={myId} socket={socket}/>
     </>
   );
 }

@@ -16,6 +16,7 @@ const InputBox = (props:any) => {
 
   const { chatRoomID } = props;
   const { myUserId } = props;
+  const { socket } = props;
 
   const [message, setMessage] = useState('');
 
@@ -23,43 +24,9 @@ const InputBox = (props:any) => {
     console.log('Microphone')
   }
 
-  const updateChatRoomLastMessage = async (messageId: string) => {
-    /*try {
-      await API.graphql(
-        graphqlOperation(
-          updateChatRoom, {
-            input: {
-              id: chatRoomID,
-              lastMessageID: messageId,
-            }
-          }
-        )
-      );
-    } catch (e) {
-      console.log(e);
-    }*/
-  }
-
   const onSendPress = async () => {
-   /* try {
-      const newMessageData = await API.graphql(
-        graphqlOperation(
-          createMessage, {
-            input: {
-              content: message,
-              userID: myUserId,
-              chatRoomID
-            }
-          }
-        )
-      )
-
-      await updateChatRoomLastMessage(newMessageData.data.createMessage.id)
-    } catch (e) {
-      console.log(e);
-    }
-
-    setMessage('');*/
+    socket.emit('sendmessage', {chatRoomID,myUserId,message}) //supposed to: store message in chat db +send straight up message to users
+    setMessage('');
   }
 
   const onPress = () => {

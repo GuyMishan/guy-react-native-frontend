@@ -1,18 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import { Message } from "../../types";
 import { StyleSheet } from "react-native";
 
-export type ChatMessageProps = {
-  message: Message;
-  myId: String,
-}
-
-const ChatMessage = (props: ChatMessageProps) => {
+const ChatMessage = (props: any) => {
   const { message, myId } = props;
 
   const isMyMessage = () => {
-    return message.user.id === myId;
+    return message.user === myId;
   }
 
   return (
@@ -26,7 +20,7 @@ const ChatMessage = (props: ChatMessageProps) => {
       ]}>
         {!isMyMessage() && <Text style={styles.name}>{message.user.name}</Text>}
         <Text style={styles.message}>{message.content}</Text>
-        <Text style={styles.time}>{message.createdAt}</Text>
+        <Text style={styles.time}>{message.createdAt.slice(11, 16)}</Text>
       </View>
     </View>
   )
