@@ -8,7 +8,7 @@ type Props = {
 };
 
 const Logo = ({width , height }: Props ) => (
-  <Image source={require('../assets/icon.png')}  style={{width: width,height: height,marginBottom: 10, marginTop : 10 , alignSelf : 'center' , borderRadius: 45}}  />
+  <Image source={require('../assets/imgs/smartCarLogo.png')}  style={{width: width,height: height,marginBottom: 10, marginTop : 10 , alignSelf : 'center' , borderRadius: 45}}  />
 );
 
 

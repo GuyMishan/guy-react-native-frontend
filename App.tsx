@@ -7,6 +7,7 @@ import { enableScreens } from "react-native-screens";
 enableScreens();
 
 import Screens from "./navigation/Screens";
+import { registerRootComponent } from "expo";
 
 export default function App() {
   return (
